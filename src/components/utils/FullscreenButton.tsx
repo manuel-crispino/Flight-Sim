@@ -8,6 +8,7 @@ type FullscreenButtonProps = {
 
 export default function FullscreenButton({ containerId }: FullscreenButtonProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const toggleFullscreen = () => {
     const elem = document.getElementById(containerId);
@@ -23,12 +24,22 @@ export default function FullscreenButton({ containerId }: FullscreenButtonProps)
   };
 
   return (
-    <button
-        type='button'
-      onClick={toggleFullscreen}
-      className="absolute bottom-4 right-4 p-3 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-80 transition-colors"
-    >
-      {isFullscreen ? <FiMinimize size={20} /> : <FiMaximize size={20} />}
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={toggleFullscreen}
+        onMouseEnter={() => setShowInfo(true)}
+        onMouseLeave={() => setShowInfo(false)}
+        className="absolute right-10 bottom-2 p-3 bg-black bg-opacity-50  text-white rounded-full hover:scale-125 hover:bg-gray-700 transition-all z-50"
+      >
+        {isFullscreen ? <FiMinimize size={20} /> : <FiMaximize size={20} />}
+      </button>
+
+      {showInfo && (
+        <div className="absolute right-25 bottom-2 p-2 bg-black bg-opacity-70 text-white rounded-md z-50 ">
+          Click to toggle fullscreen
+        </div>
+      )}
+    </>
   );
 }

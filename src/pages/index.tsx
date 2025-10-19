@@ -1,3 +1,4 @@
+import Nav from '@/components/Nav';
 import World from '@/components/World';
 import FullscreenButton from '@/components/utils/FullscreenButton';
 
@@ -7,7 +8,9 @@ export default function Home() {
       <div id="world-container" className='w-full h-200'>
         <World />
       </div>
+      <Nav>
       <FullscreenButton containerId="world-container" />
+      </Nav>
     </main>
   );
 }
