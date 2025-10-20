@@ -55,7 +55,7 @@ export default function World() {
             <button
               type="button"
               className="bg-blue-950 mb-4 ml-5 p-1 hover:bg-blue-400 hover:scale-125"
-              onClick={() => focusObject(plane.position)}
+              onClick={() =>{ focusObject(plane.position)}}
             >
               {plane.id}
             </button>
