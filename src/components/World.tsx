@@ -1,5 +1,5 @@
 'use client';
-import { useRef, Fragment } from 'react';
+import { useRef, useState, useEffect, Fragment } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import Terrain from './ThreeD/Terrain';
@@ -10,54 +10,84 @@ import * as THREE from 'three';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { latLonToPosition } from '@/utils/mapUtils';
 
+// ✅ Tipizzazione degli aerei
+interface AirplaneData {
+  id: string;
+  callsign: string;
+  lat: number;
+  lon: number;
+  altitude: number;
+  rotationY: number;
+  position: THREE.Vector3;
+}
+
 export default function World() {
   const controlsRef = useRef<OrbitControlsImpl>(null);
+  const [airplanes, setAirplanes] = useState<AirplaneData[]>([]); // ✅ niente any
 
-  const airplanes = [
-    { id: 'MAD1', lat: 40.4168, lon: -3.7038, altitude: 10000, rotationY: Math.PI / 2 },
-    { id: 'BCN1', lat: 41.3851, lon: 2.1734, altitude: 9000, rotationY: Math.PI },
-  ];
-
-  // calcoliamo le posizioni solo una volta
-  const airplanePositions = airplanes.map((plane) => ({
-    ...plane,
-    position: new THREE.Vector3(...latLonToPosition(plane.lat, plane.lon, plane.altitude)),
-  }));
-
-  console.log(
-  'Airplane positions:',
-  airplanePositions.map((p) => ({
-    id: p.id,
-    pos: [p.position.x.toFixed(2), p.position.y.toFixed(2), p.position.z.toFixed(2)]
-  }))
-);
-
+  // ✅ Funzione per centrare la camera su un aereo
   const focusObject = (position: THREE.Vector3) => {
     const controls = controlsRef.current;
     if (!controls) return;
-
     controls.target.copy(position);
     controls.object.position.set(position.x + 0, position.y + 5, position.z - 10);
     controls.update();
-
-    console.log('airplane on focus clicked', position);
   };
+
+  // ✅ Fetch dei voli in tempo reale
+  useEffect(() => {
+    const fetchFlights = async () => {
+      try {
+        const res = await fetch(
+          'https://opensky-network.org/api/states/all?lamin=35.5&lomin=-11.0&lamax=44.5&lomax=5.0'
+        );
+        const data = await res.json();
+        if (!data.states) return;
+
+        // Ogni "state" ha [0]=icao24, [1]=callsign, [5]=longitude, [6]=latitude, [7]=altitude
+        const planes: AirplaneData[] = data.states
+          .filter(
+            (p:any) =>
+              p[5] !== null && p[6] !== null && p[7] !== null
+          )
+          .map((p: any): AirplaneData => {
+            const id = p[0];
+            const callsign = p[1]?.trim() || 'N/A';
+            const lat = p[6];
+            const lon = p[5];
+            const altitude = p[7] || 10000;
+            const rotationY = Math.random() * Math.PI * 2;
+            const position = new THREE.Vector3(...latLonToPosition(lat, lon, altitude));
+            return { id, callsign, lat, lon, altitude, rotationY, position };
+          });
+
+        setAirplanes(planes);
+      } catch (err) {
+        console.error('Errore fetch voli:', err);
+      }
+    };
+
+    fetchFlights();
+    const interval = setInterval(fetchFlights, 10000); // 🔁 ogni 10s
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
-      {/* Lista aerei cliccabili */}
-      <div className="airplane-list absolute left-2 top-10 bg-gray-900/90 px-2 py-2 z-50">
-        <h1 className="pb-5 font-extrabold">List of Airplanes:</h1>
-        <p>Click to focus the airplane</p>
+      {/* 📋 Lista aerei cliccabili */}
+      <div className="airplane-list absolute left-2 top-10 bg-gray-900/90 px-2 py-2 z-50 max-h-[80vh] overflow-y-auto">
+        <h1 className="pb-5 font-extrabold">✈️ Voli sopra la Spagna</h1>
+        <p>Clicca per centrare un aereo</p>
         <br />
-        {airplanePositions.map((plane) => (
+        {airplanes.length === 0 && <p>Caricamento voli...</p>}
+        {airplanes.map((plane) => (
           <Fragment key={plane.id}>
             <button
               type="button"
-              className="bg-blue-950 mb-4 ml-5 p-1 hover:bg-blue-400 hover:scale-125"
-              onClick={() =>{ focusObject(plane.position)}}
+              className="bg-blue-950 mb-2 ml-2 p-1 text-sm rounded hover:bg-blue-400 hover:scale-110 transition"
+              onClick={() => focusObject(plane.position)}
             >
-              {plane.id}
+              {plane.callsign || plane.id}
             </button>
             <br />
           </Fragment>
@@ -75,17 +105,16 @@ export default function World() {
         />
         <Suspense fallback={null}>
           <Terrain />
-          {airplanePositions.map((plane) => (
+          {airplanes.map((plane) => (
             <Airplane
               key={plane.id}
               id={plane.id}
-              position={plane.position} // ✅ passiamo la posizione calcolata
-              scale={0.0009}
+              position={plane.position}
+              scale={0.0005}
               rotationY={plane.rotationY}
               onClick={() => focusObject(plane.position)}
             />
           ))}
-          
         </Suspense>
         <Stars />
       </Canvas>
