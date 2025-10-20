@@ -1,40 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# ✈️ Mapa 3D de Vuelos sobre España
 
-## Getting Started
+Esta es una aplicación web interactiva que muestra vuelos en tiempo real sobre España y sus alrededores en un mapa 3D.  
+Está desarrollada con [Next.js](https://nextjs.org) y [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction), utilizando datos de la API de [OpenSky Network](https://opensky-network.org/).
 
-First, run the development server:
+---
+
+## 🧩 Funcionalidades
+
+- Visualización de aviones en tiempo real sobre España y proximidades.
+- Representación 3D de la geografía con terreno y cielo estrellado.
+- Control de cámara con **OrbitControls** para rotar, acercar y alejar.
+- Lista de vuelos clicables para centrar la cámara en un avión específico.
+- Rotación realista del avión según su dirección (heading).
+- Actualización automática de la posición de los aviones cada 10 segundos.
+- Posibilidad de añadir múltiples aviones de la API OpenSky.
+
+---
+
+## ⚙️ Tecnologías utilizadas
+
+- **Next.js** – framework React para SSR y rutas API.
+- **React Three Fiber** – renderizado de gráficos 3D en React.
+- **Three.js** – motor gráfico 3D.
+- **Drei** – componentes auxiliares para React Three Fiber (OrbitControls, Stars, useGLTF).
+- **TypeScript** – tipado seguro de datos.
+- **OpenSky Network API** – fuente de datos en tiempo real de vuelos.
+- **Tailwind CSS** – diseño responsivo y estilos rápidos.
+
+---
+
+## 🏁 Instalación y ejecución
+
+1. Clona el repositorio:
 
 ```bash
+git clone https://github.com/tu-usuario/tu-repo.git
+cd tu-repo
+Instala dependencias:
+
+bash
+Copia codice
+npm install
+# o
+yarn
+# o
+pnpm install
+Ejecuta la aplicación en modo desarrollo:
+
+bash
+Copia codice
 npm run dev
-# or
+# o
 yarn dev
-# or
+# o
 pnpm dev
-# or
-bun dev
-```
+Abre http://localhost:3000 en tu navegador.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🗂 Estructura principal
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+/pages
+  index.tsx           # Página principal con el Canvas 3D
+  /api
+    hello.ts          # Ruta de prueba API
+/components
+  FlightList.tsx      # Componente lista de vuelos
+/ThreeD
+  Airplane.tsx        # Componente de avión 3D
+  Terrain.tsx         # Componente de terreno 3D
+  SunController.tsx   # Control del sol/luz
+/utils
+  mapUtils.ts         # Funciones de conversión lat/lon a coordenadas 3D
+  ```
+## 🌐 API OpenSky
+Se utiliza la API pública de OpenSky para obtener estados de vuelo.
+Ejemplo de endpoint usado:
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+https://opensky-network.org/api/states/all?lamin=34.0&lomin=-12.0&lamax=45.0&lomax=6.0
+lamin / lomin / lamax / lomax delimitan la región geográfica.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Se filtran vuelos sin coordenadas o sin altitud.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Se calcula la rotación realista del avión según true_track.
 
-## Learn More
+## 📌 Uso de la aplicación
+Los aviones se muestran en el mapa 3D según su latitud, longitud y altitud.
 
-To learn more about Next.js, take a look at the following resources:
+En la lista lateral, haz clic en un avión para centrar la cámara en él.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Usa el ratón para rotar la cámara, acercar o alejar.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+La posición de los aviones se actualiza automáticamente cada 10 segundos.
 
-## Deploy on Vercel
+## 🚀 Despliegue
+La forma más sencilla de desplegar la aplicación es mediante Vercel:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Conecta el repositorio de GitHub.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+Selecciona el proyecto Next.js.
+
+Vercel detectará automáticamente la configuración.
+
+La app se actualizará en producción automáticamente con cada commit.
+
+## 📚 Recursos
+Documentación Next.js
+
+React Three Fiber
+
+Three.js
+
+OpenSky Network API
+
+Tailwind CSS
