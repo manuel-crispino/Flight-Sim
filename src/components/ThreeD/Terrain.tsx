@@ -15,7 +15,7 @@ export default function Terrain() {
 
   return (
     <Suspense fallback={null}>
-      <primitive object={gltf.scene} scale={2.9} position={[0, 0, 0]} />
+      <primitive object={gltf.scene} scale={2.9} position={[-5, -17, 0]} />
     </Suspense>
   );
 }
