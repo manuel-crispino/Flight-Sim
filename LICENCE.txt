@@ -1,0 +1,31 @@
+Copyright (c) 2025 Manuel Crispino
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to use,
+copy, modify, and distribute the Software **for non-commercial purposes only**, 
+including personal, educational, or research use, provided that the following
+conditions are met:
+
+1. Attribution: You must give appropriate credit, provide a link to the original
+   source, and indicate if changes were made. This can be done in any reasonable
+   manner, but not in any way that suggests the licensor endorses you or your use.
+
+2. Non-Commercial Use: The Software **may not be used for commercial purposes**, 
+   including selling, licensing, or incorporating into products or services that 
+   are sold, distributed for profit, or used for commercial advantage, without 
+   express written permission from the copyright holder.
+
+3. No Warranty: The Software is provided "as is", without warranty of any kind,
+   express or implied, including but not limited to the warranties of
+   merchantability, fitness for a particular purpose, and non-infringement.
+   In no event shall the authors or copyright holders be liable for any claim,
+   damages, or other liability, whether in an action of contract, tort, or 
+   otherwise, arising from, out of, or in connection with the Software or the
+   use or other dealings in the Software.
+
+By using, copying, modifying, or distributing the Software, you agree to abide 
+by the terms of this license.
+
+---
+
+For commercial use, please contact Manuel Crispino at info@manuelcrispino.dev for licensing inquiries.
