@@ -39,10 +39,9 @@ export default function World() {
   useEffect(() => {
     const fetchFlights = async () => {
       try {
-        const res = await fetch(
-          'https://opensky-network.org/api/states/all?lamin=34.0&lomin=-12.0&lamax=45.0&lomax=6.0'
-        );
+        const res = await fetch('/api/flights');
         const data = await res.json();
+        console.log(data);
         if (!data.states) return;
 
         const planes: AirplaneData[] = (data.states as OpenSkyState[])
